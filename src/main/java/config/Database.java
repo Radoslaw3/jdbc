@@ -11,7 +11,7 @@ public class Database {
 
         private Connection connection;
 
-        public Database{
+        public Database(){
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -23,7 +23,7 @@ public class Database {
 
     public Connection getConnection() throws SQLException {
         if(connection == null) {
-            Connection connection = DriverManager
+            connection = DriverManager
                     .getConnection(URL, USER, PASSWORD);
         }
         return connection;
