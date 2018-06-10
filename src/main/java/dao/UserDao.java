@@ -3,11 +3,13 @@ package dao;
 import config.Database;
 import model.User;
 
+import javax.xml.transform.Result;
 import java.net.UnknownServiceException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao {
@@ -65,7 +67,7 @@ public class UserDao {
         statement.setString(1, user.getFirstName());
         statement.setString(2, user.getLastName());
         statement.setString(3, user.getEmail());
-        statement.setInt(4, user.getId());
+        statement.setInt(4, user.getId());  // 4ry parametry do update ustawione
 
         //5.) wykonaj zapytanie w bazie
         statement.executeUpdate();
@@ -117,9 +119,23 @@ public class UserDao {
 
     }
 
-    public List<User> findAll() {
+    public List<User> findAll() throws SQLException {
+        Connection connection = database.getConnection();
+        String sql = "SELECT id, first_name, last_name, email FROM user";
+        PreparedStatement statement = connection.prepareStatement(sql);
 
-        return null;
+        ResultSet result = statement.executeQuery();
+        List<User> users = new ArrayList<>();
+
+        while (result.next()){
+            int id = result.getInt("id");
+            String firstName = result.getString("first_name");
+            String lastName = result.getString("last_name");
+            String email = result.getString("email");
+            users.add(new User(id, firstName,lastName,email));
+        }
+
+        return users;
 
     }
 
